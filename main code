@@ -1,0 +1,29 @@
+import requests
+from bs4 import BeautifulSoup
+
+def scrape_bbc_news_headlines():
+    # Specify the URL of the BBC News website
+    url = "https://www.bbc.com/news"
+    
+    # Send a GET request to the URL
+    response = requests.get(url)
+    
+    # Check if the request was successful (status code 200)
+    if response.status_code == 200:
+        # Parse the HTML content of the page using BeautifulSoup
+        soup = BeautifulSoup(response.text, 'html.parser')
+        
+        # Extract information from the page (assuming headlines are in h3 tags with class 'gs-c-promo-heading__title')
+        headlines = []
+        for headline in soup.find_all('h3', class_='gs-c-promo-heading__title'):
+            headlines.append(headline.get_text(strip=True))
+        
+        # Print the extracted information
+        for i, headline in enumerate(headlines, start=1):
+            print(f"{i}. {headline}")
+        
+    else:
+        print(f"Failed to retrieve the page. Status code: {response.status_code}")
+
+if __name__ == "__main__":
+    scrape_bbc_news_headlines()
